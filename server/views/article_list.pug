@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  h1= title
+
+  - var trimTo20words = function(str) {
+  -   var shortStr = str.substr(0, 200);
+  -   var pattern = new RegExp(".*[., :;?!       ]", "g" );
+  -   pattern.test(shortStr).lastMatch
+  -   var newStr = shortStr.substr(0, Math.min(shortStr.length, (pattern.lastIndex)-1));
+  -   return (str.length > newStr.length) ? newStr + "..." : newStr;
+  - }
+
+  div(class="container")
+    div(class="panel-group")
+    each article, index in article_list
+      div(class="panel panel-default")
+        div(class="panel-heading")
+          h4(class="panel-title")
+            a(data-toggle="collapse" href="#"+index) #{article._source.title}
+          p Year: #{article._source.year}
+          p Abstract: #{trimTo20words(article._source.abstract)}
+          p
+          each author,index in article._source.authors
+            i
+            b #{author.firstname}  #{author.lastname}
+            if (index < article._source.authors.length - 1)
+              | , &nbsp;
+        div(id=index class="panel-collapse collapse")
+          div(class="panel-body") #{article._source.body}
+
+
+
+    else
+      li There are no articles.
